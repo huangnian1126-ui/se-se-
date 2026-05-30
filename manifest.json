@@ -1,0 +1,15 @@
+{
+  "name": "情侣拆蛋",
+  "short_name": "情侣拆蛋",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f7f1e3",
+  "theme_color": "#ff6b81",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

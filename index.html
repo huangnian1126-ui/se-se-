@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>情侣拆蛋</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="情侣拆蛋">
+    <link rel="apple-touch-icon" href="logo.png">
+
+    <style>
+        :root {
+            --primary-color: #ff6b81;
+            --secondary-color: #a55eea;
+            --bg-color: #f7f1e3;
+        }
+
+        html, body {
+            overscroll-behavior: contain;
+            overscroll-behavior-y: none;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            font-family: sans-serif;
+            overflow: hidden; 
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin: 0;
+            padding-top: 25px;
+            font-size: 2.2rem;
+            letter-spacing: 3px;
+            text-align: center;
+        }
+
+        .status-panel {
+            font-size: 1.1rem;
+            margin: 15px 0;
+            font-weight: bold;
+            color: #2c3e50;
+            padding: 8px 20px;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(255, 107, 129, 0.3);
+            font-weight: bold;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #home-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            background-color: var(--bg-color);
+        }
+
+        #game-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: none; 
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+            z-index: 20;
+            background-color: var(--bg-color);
+            padding-top: 20px;
+            padding-bottom: 80px; 
+        }
+
+        .grid-wrapper {
+            flex: 1;
+            width: 100%;
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
+            padding: 0 20px;
+            box-sizing: border-box;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 10px;
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            padding: 20px;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.06);
+            box-sizing: border-box;
+            align-self: flex-start;
+        }
+
+        @media (max-width: 480px) {
+            .game-grid {
+                grid-template-columns: repeat(5, 1fr); 
+                gap: 8px;
+                padding: 15px;
+            }
+        }
+
+        .bomb-item {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #ffeaa7 0%, #ffdf76 100%);
+            border-radius: 14px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            cursor: pointer;
+            box-shadow: inset 0 -3px 0 rgba(0,0,0,0.08), 0 3px 5px rgba(0,0,0,0.05);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .bomb-item.opened {
+            background: #e0e0e0;
+            border-radius: 14px; 
+            box-shadow: inset 0 3px 6px rgba(0,0,0,0.1);
+            cursor: default;
+        }
+
+        .bomb-item.opened-safe {
+            background: #e8f5e9;
+            border-radius: 14px; 
+            box-shadow: inset 0 3px 6px rgba(0,0,0,0.05);
+            cursor: default;
+        }
+
+        .bomb-item.opened-drink {
+            background: #e1f5fe;
+            border-radius: 14px;
+            box-shadow: inset 0 3px 6px rgba(0,0,0,0.05);
+            cursor: default;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 35px 25px;
+            border-radius: 24px;
+            width: 85%;
+            max-width: 420px;
+            max-height: 70vh;
+            overflow-y: auto;
+            text-align: center;
+            box-sizing: border-box;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        #result-text {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin: 35px 0;
+            font-weight: bold;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="home-screen">
+        <h1 style="padding-top: 0; margin-bottom: 40px;">情侣拆蛋</h1>
+        <div class="btn-group">
+            <button onclick="startGame()">开始游戏</button>
+        </div>
+    </div>
+
+    <div id="game-screen">
+        <h1>情侣拆蛋</h1>
+        <div class="status-panel" id="turn-display">当前轮到：玩家 1</div>
+        
+        <div class="grid-wrapper">
+            <div class="game-grid" id="grid-container"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="result-modal">
+        <div class="modal-content">
+            <div id="result-text"></div>
+            <button onclick="closeModal()" style="width: 80%; padding: 12px;">确定</button>
+        </div>
+    </div>
+
+    <script>
+        var currentPlayer = 1;
+        var openedCount = 0;
+        var inGameMode = false; 
+
+        var bigRewardPool = [
+            "自定义惩罚001", "自定义惩罚002", "自定义惩罚003", "自定义惩罚004", "自定义惩罚005", "自定义惩罚006", "自定义惩罚007", "自定义惩罚008", "自定义惩罚009", "自定义惩罚010",
+            "自定义惩罚011", "自定义惩罚012", "自定义惩罚013", "自定义惩罚014", "自定义惩罚015", "自定义惩罚016", "自定义惩罚017", "自定义惩罚018", "自定义惩罚019", "自定义惩罚020",
+            "自定义惩罚021", "自定义惩罚022", "自定义惩罚023", "自定义惩罚024", "自定义惩罚025", "自定义惩罚026", "自定义惩罚027", "自定义惩罚028", "自定义惩罚029", "自定义惩罚030",
+            "自定义惩罚031", "自定义惩罚032", "自定义惩罚033", "自定义惩罚034", "自定义惩罚035", "自定义惩罚036", "自定义惩罚037", "自定义惩罚038", "自定义惩罚039", "自定义惩罚040",
+            "自定义惩罚041", "自定义惩罚042", "自定义惩罚043", "自定义惩罚044", "自定义惩罚045", "自定义惩罚046", "自定义惩罚047", "自定义惩罚048", "自定义惩罚049", "自定义惩罚050",
+            "自定义惩罚051", "自定义惩罚052", "自定义惩罚053", "自定义惩罚054", "自定义惩罚055", "自定义惩罚056", "自定义惩罚057", "自定义惩罚058", "自定义惩罚059", "自定义惩罚060",
+            "自定义惩罚061", "自定义惩罚062", "自定义惩罚063", "自定义惩罚064", "自定义惩罚065", "自定义惩罚066", "自定义惩罚067", "自定义惩罚068", "自定义惩罚069", "自定义惩罚070",
+            "自定义惩罚071", "自定义惩罚072", "自定义惩罚073", "自定义惩罚074", "自定义惩罚075", "自定义惩罚076", "自定义惩罚077", "自定义惩罚078", "自定义惩罚079", "自定义惩罚080",
+            "自定义惩罚081", "自定义惩罚082", "自定义惩罚083", "自定义惩罚084", "自定义惩罚085", "自定义惩罚086", "自定义惩罚087", "自定义惩罚088", "自定义惩罚089", "自定义惩罚090"
+        ];
+
+        window.addEventListener('popstate', function () {
+            if (inGameMode) {
+                closeGameView();
+            }
+        });
+
+        function startGame() {
+            inGameMode = true;
+            window.history.pushState({ active: true }, "");
+            
+            document.getElementById('home-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'flex';
+            initGame();
+        }
+
+        function backToHomeDirect() {
+            if (inGameMode) {
+                window.history.back();
+            }
+        }
+
+        function closeGameView() {
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('home-screen').style.display = 'flex';
+            inGameMode = false;
+        }
+
+        function initGame() {
+            currentPlayer = 1;
+            openedCount = 0;
+            
+            var display = document.getElementById('turn-display');
+            if (display) {
+                display.innerText = "当前轮到：玩家 1";
+                display.style.color = 'var(--primary-color)';
+            }
+
+            var shuffledPool = [];
+            for (var k = 0; k < bigRewardPool.length; k++) {
+                shuffledPool.push(bigRewardPool[k]);
+            }
+            for (var i = shuffledPool.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = shuffledPool[i];
+                shuffledPool[i] = shuffledPool[j];
+                shuffledPool[j] = temp;
+            }
+            
+            var finalGameRewards = shuffledPool.slice(0, 90);
+
+            while(finalGameRewards.length < 90) {
+                finalGameRewards.push("自定义惩罚补位_" + (finalGameRewards.length + 1));
+            }
+
+            for (var s = 0; s < 70; s++) {
+                finalGameRewards.push("你很幸运，没有踩雷");
+            }
+            
+            for (var t = 0; t < 40; t++) {
+                finalGameRewards.push("罚酒一杯");
+            }
+
+            for (var x = finalGameRewards.length - 1; x > 0; x--) {
+                var y = Math.floor(Math.random() * (x + 1));
+                var tempVal = finalGameRewards[x];
+                finalGameRewards[x] = finalGameRewards[y];
+                finalGameRewards[y] = tempVal;
+            }
+
+            var container = document.getElementById('grid-container');
+            if (!container) return;
+            container.innerHTML = ''; 
+
+            for (var m = 0; m < 200; m++) {
+                var bomb = document.createElement('div');
+                bomb.className = 'bomb-item';
+                bomb.innerText = '💣';
+                
+                var rewardItem = finalGameRewards[m];
+                bomb.setAttribute('data-reward', rewardItem);
+                
+                bomb.onclick = function() {
+                    if (this.className.indexOf('opened') !== -1 || 
+                        this.className.indexOf('opened-safe') !== -1 ||
+                        this.className.indexOf('opened-drink') !== -1) return;
+                    
+                    openedCount++;
+                    var rewardText = this.getAttribute('data-reward');
+
+                    if (rewardText === "你很幸运，没有踩雷") {
+                        this.className = 'bomb-item opened-safe';
+                        this.innerText = '✅'; 
+                    } else if (rewardText === "罚酒一杯") {
+                        this.className = 'bomb-item opened-drink';
+                        this.innerText = '💧'; 
+                    } else {
+                        this.className = 'bomb-item opened';
+                        this.innerText = '💥'; 
+                    }
+
+                    document.getElementById('result-text').innerText = rewardText;
+                    document.getElementById('result-modal').style.display = 'flex';
+
+                    currentPlayer = (currentPlayer === 1) ? 2 : 1;
+                    var d = document.getElementById('turn-display');
+                    if (d) {
+                        d.innerText = "当前轮到：玩家 " + currentPlayer;
+                        d.style.color = (currentPlayer === 1) ? 'var(--primary-color)' : 'var(--secondary-color)';
+                    }
+
+                    if (openedCount === 200) {
+                        setTimeout(function() { 
+                            alert("不可思议！200个炸弹已经全部安全拆除完毕！"); 
+                            backToHomeDirect();
+                        }, 500);
+                    }
+                };
+                container.appendChild(bomb);
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('result-modal').style.display = 'none';
+        }
+
+        window.history.replaceState({ active: false }, "");
+
+        // ✨ 注册 PWA 服务脚本
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then(function() {
+                console.log('Service Worker 注册成功！');
+            }).catch(function(err) {
+                console.log('Service Worker 注册失败: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
