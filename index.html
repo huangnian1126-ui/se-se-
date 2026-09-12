@@ -42,10 +42,10 @@
         h1 {
             color: var(--primary-color);
             margin: 0;
-            padding-top: 25px;
-            font-size: 2.2rem;
-            letter-spacing: 3px;
+            font-size: 2.4rem;
+            letter-spacing: 4px;
             text-align: center;
+            font-weight: 700;
         }
 
         .status-panel {
@@ -89,6 +89,8 @@
             justify-content: center;
             z-index: 10;
             background-color: var(--bg-color);
+            padding: 0 24px;
+            box-sizing: border-box;
         }
 
         #game-screen {
@@ -331,7 +333,6 @@
             box-sizing: border-box;
         }
 
-        /* 设置主页三个大卡片 */
         .settings-main {
             display: flex;
             flex-direction: column;
@@ -388,7 +389,6 @@
             font-weight: 300;
         }
 
-        /* 详情页列表 */
         .punish-card {
             background: white;
             border-radius: 16px;
@@ -454,7 +454,6 @@
             padding: 40px 0;
         }
 
-        /* 添加/编辑弹窗 */
         #edit-modal .modal-content {
             padding: 28px 22px 24px;
         }
@@ -502,7 +501,6 @@
             box-shadow: none;
         }
 
-        /* 删除确认弹窗 */
         #confirm-modal .modal-content {
             padding: 32px 24px 26px;
         }
@@ -536,28 +534,30 @@
             background: linear-gradient(90deg, #ff4757, #ff6b81);
         }
 
-        /* 首页按钮 */
+        /* ========== 首页按钮优化（针对PWA全屏） ========== */
         .home-start-btn {
-            padding: 18px 56px;
-            font-size: 1.35rem;
-            border-radius: 32px;
-            box-shadow: 0 8px 20px rgba(255, 107, 129, 0.35);
+            margin-top: 36px;
+            padding: 20px 64px;
+            font-size: 1.45rem;
+            border-radius: 36px;
+            box-shadow: 0 10px 28px rgba(255, 107, 129, 0.4);
+            letter-spacing: 1px;
         }
 
         .home-settings-btn {
-            margin-top: 20px;
-            padding: 14px 42px;
-            font-size: 1.1rem;
+            margin-top: 22px;
+            padding: 15px 48px;
+            font-size: 1.15rem;
             background: linear-gradient(90deg, #a55eea, #c39bff);
-            box-shadow: 0 6px 16px rgba(165, 94, 234, 0.3);
-            border-radius: 28px;
+            box-shadow: 0 8px 20px rgba(165, 94, 234, 0.32);
+            border-radius: 30px;
         }
     </style>
 </head>
 <body>
 
     <div id="home-screen">
-        <h1 style="padding-top: 0; margin-bottom: 48px;">情侣盲盒</h1>
+        <h1>情侣盲盒</h1>
         <button class="home-start-btn" onclick="startGame()">开始游戏</button>
         <button class="home-settings-btn" onclick="openSettings()">设置</button>
     </div>
@@ -577,9 +577,7 @@
         <div class="settings-header">
             <h2>设置</h2>
         </div>
-        <div class="settings-main" id="settings-main">
-            <!-- 动态渲染三个大卡片 -->
-        </div>
+        <div class="settings-main" id="settings-main"></div>
     </div>
 
     <!-- 设置详情页 -->
@@ -587,9 +585,7 @@
         <div class="settings-header">
             <h2 id="detail-title">详情</h2>
         </div>
-        <div class="settings-body" id="settings-detail-body">
-            <!-- 动态渲染列表 -->
-        </div>
+        <div class="settings-body" id="settings-detail-body"></div>
     </div>
 
     <!-- 结果弹窗 -->
@@ -636,410 +632,31 @@
         var inGameMode = false; 
         var inSettingsMode = false;
         var inDetailMode = false;
-        var currentDetailType = null; // 'fixed' | 'special' | 'random'
+        var currentDetailType = null;
         var countdownInterval = null;
 
         // ==================== 原随机惩罚完整数据 ====================
         var bigRewardPool = [
-            "讲出你的XP一个",
-            "用嘴含住对方私处10秒",
-            "用私处蹭对面私处30秒/拖光的",
-            "当着对方面揉自己的胸 30 秒",
-            "用嘴巴给对方喂酒一杯",
-            "罚酒三杯",
-            "吸咬对方乳头20秒",
-            "隔着裤子打对方屁屁10下",
-            "罚酒一杯",
-            "用嘴对嘴喂对方吃水果",
-            "罚酒两杯",
-            "罚酒三杯",
-            "帮对方口10秒",
-            "摸对方胸20秒",
-            "挠对面痒10秒",
-            "用胸蹭对面的脸20秒下",
-            "把对方的脖子舔到脚",
-            "亲吻对方的脚背5秒",
-            "和对方舌吻20秒",
-            "亲亲对面脸蛋10下",
-            "亲亲对面背10下",
-            "亲亲对面胸20下",
-            "吸住对方乳头30秒",
-            "用屁股去蹭对方的下体20秒",
-            "当着对方面揉自己胸20秒（用力）",
-            "把对方摸湿或者摸硬",
-            "吮吸对方的手指15秒",
-            "吮吸对方乳头15秒",
-            "轻舔对方下面30秒",
-            "罚酒三杯",
-            "轻轻啃咬对方的肩膀",
-            "女生用胸部去夹男生的手臂",
-            "把脸埋进对方胸口，左右磨蹭20秒",
-            "欣赏对方裸体1分钟，并夸赞两个性感的部位",
-            "女生发出诱惑的声音叫床20秒，男生给女生做乳头按摩",
-            "说出你与对方想尝试的姿势",
-            "说出你与对方想尝试的姿势",
-            "说出你想尝试与对方做爱的某个场景",
-            "说出你想尝试与对方做爱的某个场景",
-            "用手伸进对方内裤里轻轻挑逗，直到对方有反应",
-            "双手被对方按在头顶，保持这个姿势被亲吻1分钟",
-            "现在跪趴着，让对方从后面轻轻拍打屁股直到变红",
-            "把对方的手绑住（用皮带或睡衣腰带），进行口交30秒",
-            "含住对方的一侧乳头，手玩弄另一侧40秒",
-            "用牛牛蹭对方的脸20秒",
-            "用牛牛蹭对方的脸，勾引对方",
-            "隔着内裤蹭对方的脸20秒",
-            "隔着内裤坐上对方牛牛30秒",
-            "后入姿势，仅仅是贴在一起磨蹭，不进入40秒",
-            "隔着内裤坐上对方牛牛30秒",
-            "隔着内裤坐上对方牛牛30秒",
-            "接下来两轮的惩罚都由对方完成",
-            "向对方展示用手揉牛牛20秒",
-            "坐对方腿上玩10局",
-            "含一口水，再含对方的下面10秒",
-            "由对方完成接下来1轮的惩罚",
-            "把头埋在对方颈窝里，深呼吸闻对方的味道10秒",
-            "面对面盘坐对方身上，完成10轮",
-            "舔对方的乳头10秒",
-            "与对方喝一杯交杯酒",
-            "揉对方下面15秒",
-            "向对方展示，隔着内裤揉自己下面20秒",
-            "向对方展示，脱下内裤揉自己下面15秒",
-            "向对方展示，把内裤扒一边揉自己私处30秒",
-            "像考拉一样手脚并用缠在对方身上玩10回合",
-            "亲亲对方脸蛋20下",
-            "悄悄对着对方说3句骚话",
-            "用力揉自己的胸20秒",
-            "捏着自己乳头10下，要有动作幅度",
-            "拔下对方下面一根毛毛",
-            "让对方打自己屁屁10下",
-            "让对方打自己屁屁5下",
-            "让对方打自己屁屁20下",
-            "两人脱光上身，肌肤紧贴拥抱1分钟",
-            "揉自己私处10秒",
-            "用嘴拿起食物喂给对方",
-            "互相轻咬对方的臀部肉肉3下",
-            "让对方舔你指定位置5下",
-            "让对方舔你指定位置3下",
-            "用胸或者蛋蛋蹭对方的脸15秒",
-            "用胸堵住对面的鼻子15秒",
-            "跟对方热吻20秒",
-            "用舌尖快速弹动刺激对方的小豆豆/龟头1分钟",
-            "对着对方耳垂吹10口气",
-            "让对方吹自己耳垂10口气",
-            "让对方打自己脸3下",
-            "骑在对方身上10局",
-            "用舌尖快速弹动刺激对方的小豆豆/龟头1分钟",
-            "手伸到裤子里揉20秒私处",
-            "舔对方大腿根10秒",
-            "舔对方大腿根20秒",
-            "舔对方的私处20秒",
-            "含住对方私处30秒",
-            "用舌头舔对方私处30秒",
-            "脱掉内裤套对方头上玩5局",
-            "从脚亲到对方头顶",
-            "亲对方大腿根20下",
-            "亲对方屁屁5下",
-            "亲对方屁屁10下",
-            "用力打自己屁屁20下",
-            "用力打自己屁股5下",
-            "让对方打自己屁屁10下",
-            "向对方展示自己的牛牛10秒",
-            "脱下内裤揉自己牛牛，并且向对方展示20秒",
-            "不脱内裤揉自己牛牛，并向对方展示20秒",
-            "脱下内裤蹭对方牛牛30秒",
-            "不脱内裤蹭对方牛牛30秒",
-            "不脱内裤，坐对方牛牛上玩10局",
-            "脱下内裤，坐对方牛牛上玩10局",
-            "让对方从背后揉自己胸20秒",
-            "抱住对面的头，用胸让对方窒息20秒",
-            "被对方打屁屁20下",
-            "打对方屁屁10下",
-            "亲吻对方的手背、手腕、手肘内侧",
-            "在身上某个部位任意放一种食物让对方吃掉",
-            "在身上某个部位任意放一种食物让对方吃掉",
-            "嘴对嘴喂对方酒一杯",
-            "用嘴叼着自己的内裤，学狗叫20声",
-            "用嘴脱下对方的内裤，并且再用嘴穿上",
-            "用舌尖舔过对方嘴唇一圈",
-            "用被子把两人裹成寿司卷 30 秒",
-            "轻轻咬住对方的耳垂，坚持10秒",
-            "穿上一件衣服",
-            "脱光光玩10回不准遮挡",
-            "脱光光玩10回不准遮挡",
-            "脱光光玩5会不准遮挡",
-            "揉对方的屁屁5下",
-            "亲亲对面的背20下",
-            "用脸蹭对方私处20秒",
-            "用鼻尖蹭对方私处20秒",
-            "用舌尖舔对方私处或者阴蒂20下",
-            "被对方隔着内裤揉私处10秒",
-            "隔着内裤揉对方私处20秒",
-            "伸进对方内裤揉对方私处30秒",
-            "打对方的私处3下",
-            "给对方种两个草莓",
-            "说一个想爱爱的场景",
-            "自己站着，对方跪着帮对方口30秒",
-            "脱下内裤，用嘴叼着狗爬10圈叫出来",
-            "轻咬对方乳头10秒",
-            "与对方喝交杯酒",
-            "亲吻对方的额头5下",
-            "模仿对方生气的样子",
-            "抱起对方脚尖离地20秒",
-            "用力抱住对方10秒",
-            "给对方当人肉坐垫30秒",
-            "真心话:觉得自己m属性多一点还是s属性多一点",
-            "挠对方痒痒10秒",
-            "说一件和对方最想做的十分羞耻的事情",
-            "从脖领向对方身体吹气10秒",
-            "手指在对方肚子区域滑动20秒",
-            "手指在对方背区域滑动30秒",
-            "手指在对方胸上滑动20秒",
-            "亲对方手背10下",
-            "亲对方脚背10下",
-            "亲对方脚掌5下",
-            "亲对方嘴10下",
-            "挠对方痒痒30秒",
-            "用力抱对方30秒",
-            "金鸡独立玩3局",
-            "把对方背起来玩5局",
-            "做出吐舌头翻白眼的表情15秒",
-            "亲吻对方的脖子20下",
-            "在对方耳旁呼气10下",
-            "在对方身上做10个俯卧撑",
-            "亲对方的双眼",
-            "蒙上眼睛1分钟任由对方动手动脚",
-            "隔着内裤亲对方的私处30秒",
-            "隔着衣服亲对方胸30秒",
-            "掰开展示自己私处并且描述它现在是什么状态",
-            "趴桌子上翘屁屁让对方打10下",
-            "学小狗求对方打自己屁屁10下",
-            "叫对方主人，求求对方打自己屁屁10下",
-            "用手隔着内裤自慰1分钟给对方看",
-            "跪在对方面前手背上，含住对方的牛牛30秒",
-            "蒙住双眼，绑住双手，任由对方在自己身上玩3分钟",
-            "跪趴摇晃屁股，让对方打15下",
-            "亲吻对方锁骨，一路亲到胸口",
-            "骑在对方胸口，亲吻大腿根部10下",
-            "双手举过头顶，让对方在身上抚摸1分钟",
-            "角色扮演，你是主人对方是小狗",
-            "角色扮演，你是小狗对方是主人",
-            "用舌头画圈舔对方的乳头（隔着衣服也行）",
-            "玩一次石头剪刀布，输的人罚两杯酒",
-            "用一种奇怪的口音对对方说两句我爱你",
-            "用手掌盖住对方的眼睛，给一个惊喜的吻",
-            "轻轻咬对方肩膀，留下牙印",
-            "在对方耳边用气音说一句最骚的话",
-            "模仿猫咪叫声，并且在对方怀里蹭几下",
-            "含住对方手指，慢慢吮吸20秒",
-            "用鼻尖蹭对方乳沟，深呼吸闻味道",
-            "在对方大腿内侧亲吻但不许碰到私处",
-            "舌吻同时一只手摸对方屁股40秒",
-            "坐对方腿上，面对面舌吻40秒",
-            "让对方坐你腿上，面对面舌吻30秒",
-            "隔着内裤摸对方私处30秒",
-            "用嘴脱掉对方的内裤",
-            "把对方衣服脱到只剩内衣",
-            "用手指轻轻画圈抚摸对方乳头30秒",
-            "让对方趴着，你从后面亲吻后颈",
-            "手指伸进对方内裤，轻轻抚摸",
-            "捏对方屁股并说一句色色的话",
-            "脱掉对方上衣，用胸部蹭对方胸口",
-            "让对方把腿抬高，你亲吻大腿根部",
-            "用指尖从对方脖子慢慢划到私处",
-            "双手同时玩弄对方两个乳头20秒",
-            "咬着对方内裤边缘往下拉一点",
-            "舔对方乳头30秒",
-            "脱掉对方所有衣服，只剩内衣",
-            "脱掉对方所有衣服，只剩内裤",
-            "把对方内裤拉到一边，直接用舌头进攻",
-            "用私处摩擦对方私处1分钟",
-            "让对方跪趴把屁股翘高，然后开始舌吻30秒",
-            "描述你现在最想用什么姿势操对方",
-            "让对方自己掰开下面给你看30秒",
-            "把对方腿压到胸口，舔到下面",
-            "在对方耳边描述你现在最想对他做什么",
-            "深喉练习（只含龟头/阴蒂）10秒",
-            "用舌头在对方肚子上写我好爱你",
-            "用嘴巴含住对方私处，隔着布料吸",
-            "让对方对你讲三句最骚的话",
-            "用舌头在对方腿上写'我好爱你'",
-            "深喉练习（只含龟头/阴蒂）10秒",
-            "用舌头在对方背上写'我好爱你'",
-            "边舔对方私处边抬头看着对方的眼睛20秒",
-            "互相用手指抚摸对方私处 1 分钟",
-            "用口水涂满对方私处慢慢揉30秒",
-            "手指插入或者撸对方 40 秒，对方必须看着",
-            "亲吻对方的手背、手腕、手肘内侧",
-            "把对方按在床上，从后面舔到前面",
-            "看着对方自慰30秒（一手揉胸，一手揉/撸下面）",
-            "对着对方自慰30秒（一揉手胸，一手揉/撸下面）",
-            "让对方把腿张开到最大，你低头深吻大腿根",
-            "骑在对方大腿上摩擦30秒",
-            "互相用手指抚摸对方私处 1 分钟",
-            "隔着内裤舔对方私处30秒",
-            "用舌尖在对方乳头周围快速画8字，重复10次",
-            "叫对方最色情的昵称",
-            "隔着裤子打对方屁屁5下",
-            "用舌头舔对方的蛋蛋或者阴蒂15秒",
-            "含住对方的蛋蛋或者阴蒂10秒",
-            "舔对方私处15秒",
-            "用私处蹭对面私处30秒/拖光的",
-            "用力坐对面私处上20秒",
-            "隔着内裤揉对方下面20秒",
-            "揉对方屁股蛋子15秒",
-            "对着对方耳垂吹气10下",
-            "打对方屁股蛋子10下",
-            "说出你敏感部位一个",
-            "讲出你做爱喜欢的姿",
-            "讲出你的XP一个",
-            "用嘴含住对方私处10秒",
-            "用私处蹭对面私处30秒/拖光的",
-            "当着对方面揉自己的胸30秒",
-            "用嘴巴给对方喂酒一杯",
-            "罚酒三杯",
-            "吸咬对方乳头20秒",
-
-            // ==================== 新增的78条惩罚 ====================
-            "用舌头从对方脖子慢慢舔到耳垂，持续30秒",
-            "嘴里含一口酒，然后喂给对方",
-            "用嘴巴帮对方脱掉1件衣服，不能用手",
-            "在对方大腿内侧轻轻咬1口，然后用舌头安慰，持续15秒",
-            "给对方买一件情趣内衣现穿",
-            "让对方决定下一杯喝多少",
-            "对着对面说两句骚话",
-            "用嘴叼着内裤，学小狗叫转10圈",
-            "坐在对方腿上前后磨蹭1分钟",
-            "用手指轻轻划过对方乳头，环圈10次",
-            "用胸部在对方脸上摩擦30秒",
-            "用嘴脱掉对方的内裤",
-            "双手捧着对方的屁屁，用力揉捏1分钟",
-            "轻轻打对方屁屁10下，每打一下亲吻1下",
-            "用嘴唇从脚趾慢慢亲到对方大腿根",
-            "双手从背后把对方抱住，慢慢抚摸胸部，20秒",
-            "用牙齿轻轻拉扯对方内裤边缘",
-            "坐对方身上，双腿缠绕着腰摩擦40秒",
-            "用手指在对方私密部位轻轻按压打圈",
-            "趴着让对方亲吻背部20秒",
-            "说出你的XP",
-            "罚酒两杯",
-            "公主抱对方20秒，没撑住不算",
-            "说说你的XP",
-            "用舌头轻舔对方乳沟，持续45秒",
-            "用指尖轻刮对方大腿内侧30秒",
-            "双手慢慢从自己脖子滑到私处，再按揉20秒",
-            "轻轻亲啄对方乳晕",
-            "跟对方舌吻20秒",
-            "轻啄对面嘴唇15下",
-            "双方共罚一杯酒",
-            "坐在对方身上，用下面隔着内裤摩擦对方私处",
-            "反弹下一次的惩罚",
-            "指定对面做一个动作",
-            "下一局双倍惩罚下一局双倍惩罚",
-            "亲吻对方下面的毛毛10下",
-            "双手捧脸深吻对方的同时，身体紧贴摩擦对方20秒",
-            "让对方趴着，骑在对方背上，亲吻对方脖子30秒",
-            "下一局双倍惩罚",
-            "M腿让对方揉阴蒂20秒",
-            "被对方隔着内裤揉/撸30秒",
-            "给对方身上种一颗草莓",
-            "用牙齿轻咬对方肩膀留下浅印",
-            "从抽到开始，抱到镜子面前，站着亲吻20秒",
-            "用手指轻轻弹对方的乳头10下",
-            "用胸部压着对方的背摩擦20秒",
-            "弹对方两个脑瓜崩",
-            "用舌头在对方的阴蒂/，龟头上绕30圈",
-            "亲吻对方锁骨并吮吸",
-            "轻打对方大腿内侧10下",
-            "从后面抱住对方，一手揉胸，一手揉下边20秒",
-            "下一局双倍惩罚",
-            "轻咬对方腰侧肉30秒",
-            "用私密部位拍打对方脸颊20下",
-            "用指尖轻轻划过对方背部15秒",
-            "双手在对方大腿内侧按摩20秒",
-            "给对方捶背1分钟",
-            "自慰给对方看1分钟",
-            "用指尖轻捏对方乳头30秒",
-            "吸吮对方耳后根30秒",
-            "翘着屁屁把私密部位给对方看40秒",
-            "把对方双腿扛肩上，亲吻大腿内侧1分钟",
-            "用色情脏话骂对方5句",
-            "给对方展示慢慢从自己胸部抚摸到私密部位按揉30秒",
-            "男生把牛牛左右摇摆20秒",
-            "男生把牛牛上下摆20秒",
-            "男生把牛牛摸硬",
-            "用力允吸对方乳头30秒",
-            "轻咬对方肩膀，同时揉胸20秒",
-            "把腿张开让对方看自己自摸，然后亲20秒",
-            "双手从后面揉入对方胸部同时轻咬脖子40秒",
-            "吮吸对方大腿内侧肉肉30秒",
-            "让对方把自己抱起来，双脚缠腰走到镜子面前，持续20秒",
-            "亲吻对方嘴20秒",
-            "双手在对方腰窝处按摩40秒",
-            "轻咬对方耳廓30秒",
-            "用私密部位在对方肚子上画圈，画10圈",
-            "亲吻对方脚底板10下",
-            "轻拍对方脸颊，深吻20秒",
-            "推倒对方四肢张开，亲遍全身",
-            "亲吻对方嘎吱窝10下",
-            "让对方舌头吐出来，亲吻舌头20下",
-            "吮吸对方舌头20秒",
-            "轻打对方胸部5下",
-            "把对方压到墙上，抬腿亲私处50秒",
-            "用舌头舔对方鼻梁五下",
-            "自己用手掰开私处给对方展示30秒",
-            "亲吻对方脚踝",
-            "轻咬对方肩膀留下印子",
-            "亲吻对方耳朵30秒",
-            "把对方双手按头上，亲全身",
-            "把对方抱起来，让双腿缠腰50秒",
-            "在对方肚子上用口红或者笔写上'操我'",
-            "吮吸对方乳头到发硬",
-            "本局想个骚称呼，让对方叫自己一整局",
-            "亲吻对方的眉毛10下",
-            "下一局双倍惩罚",
-            "亲吻对方小腹10下",
-            "用手在对方背上写字，没猜到就打10下屁屁",
-            "把对方当马骑10圈",
-            "被对方当马骑10圈",
-            "用力打对方屁屁，留下印子",
-            "把对方压在墙上，抬起一条腿亲私处10下",
-            "隔着内裤在对方私处上摩擦40秒",
-            "亲吻对方腋下5次",
-            "下一局双倍惩罚",
-            "用屁屁坐对方脸上15秒",
-            "用嘴衔起食物，叼到对方嘴里",
-            "这一局你是小狗，对方是主人",
-            "这一局你是主人，对方是小狗",
-            "用指尖划过对方全身",
-            "下一局双倍惩罚"
+            "讲出你的XP一个","用嘴含住对方私处10秒","用私处蹭对面私处30秒/拖光的","当着对方面揉自己的胸 30 秒","用嘴巴给对方喂酒一杯","罚酒三杯","吸咬对方乳头20秒","隔着裤子打对方屁屁10下","罚酒一杯","用嘴对嘴喂对方吃水果","罚酒两杯","罚酒三杯","帮对方口10秒","摸对方胸20秒","挠对面痒10秒","用胸蹭对面的脸20秒下","把对方的脖子舔到脚","亲吻对方的脚背5秒","和对方舌吻20秒","亲亲对面脸蛋10下","亲亲对面背10下","亲亲对面胸20下","吸住对方乳头30秒","用屁股去蹭对方的下体20秒","当着对方面揉自己胸20秒（用力）","把对方摸湿或者摸硬","吮吸对方的手指15秒","吮吸对方乳头15秒","轻舔对方下面30秒","罚酒三杯","轻轻啃咬对方的肩膀","女生用胸部去夹男生的手臂","把脸埋进对方胸口，左右磨蹭20秒","欣赏对方裸体1分钟，并夸赞两个性感的部位","女生发出诱惑的声音叫床20秒，男生给女生做乳头按摩","说出你与对方想尝试的姿势","说出你与对方想尝试的姿势","说出你想尝试与对方做爱的某个场景","说出你想尝试与对方做爱的某个场景","用手伸进对方内裤里轻轻挑逗，直到对方有反应","双手被对方按在头顶，保持这个姿势被亲吻1分钟","现在跪趴着，让对方从后面轻轻拍打屁股直到变红","把对方的手绑住（用皮带或睡衣腰带），进行口交30秒","含住对方的一侧乳头，手玩弄另一侧40秒","用牛牛蹭对方的脸20秒","用牛牛蹭对方的脸，勾引对方","隔着内裤蹭对方的脸20秒","隔着内裤坐上对方牛牛30秒","后入姿势，仅仅是贴在一起磨蹭，不进入40秒","隔着内裤坐上对方牛牛30秒","隔着内裤坐上对方牛牛30秒","接下来两轮的惩罚都由对方完成","向对方展示用手揉牛牛20秒","坐对方腿上玩10局","含一口水，再含对方的下面10秒","由对方完成接下来1轮的惩罚","把头埋在对方颈窝里，深呼吸闻对方的味道10秒","面对面盘坐对方身上，完成10轮","舔对方的乳头10秒","与对方喝一杯交杯酒","揉对方下面15秒","向对方展示，隔着内裤揉自己下面20秒","向对方展示，脱下内裤揉自己下面15秒","向对方展示，把内裤扒一边揉自己私处30秒","像考拉一样手脚并用缠在对方身上玩10回合","亲亲对方脸蛋20下","悄悄对着对方说3句骚话","用力揉自己的胸20秒","捏着自己乳头10下，要有动作幅度","拔下对方下面一根毛毛","让对方打自己屁屁10下","让对方打自己屁屁5下","让对方打自己屁屁20下","两人脱光上身，肌肤紧贴拥抱1分钟","揉自己私处10秒","用嘴拿起食物喂给对方","互相轻咬对方的臀部肉肉3下","让对方舔你指定位置5下","让对方舔你指定位置3下","用胸或者蛋蛋蹭对方的脸15秒","用胸堵住对面的鼻子15秒","跟对方热吻20秒","用舌尖快速弹动刺激对方的小豆豆/龟头1分钟","对着对方耳垂吹10口气","让对方吹自己耳垂10口气","让对方打自己脸3下","骑在对方身上10局","用舌尖快速弹动刺激对方的小豆豆/龟头1分钟","手伸到裤子里揉20秒私处","舔对方大腿根10秒","舔对方大腿根20秒","舔对方的私处20秒","含住对方私处30秒","用舌头舔对方私处30秒","脱掉内裤套对方头上玩5局","从脚亲到对方头顶","亲对方大腿根20下","亲对方屁屁5下","亲对方屁屁10下","用力打自己屁屁20下","用力打自己屁股5下","让对方打自己屁屁10下","向对方展示自己的牛牛10秒","脱下内裤揉自己牛牛，并且向对方展示20秒","不脱内裤揉自己牛牛，并向对方展示20秒","脱下内裤蹭对方牛牛30秒","不脱内裤蹭对方牛牛30秒","不脱内裤，坐对方牛牛上玩10局","脱下内裤，坐对方牛牛上玩10局","让对方从背后揉自己胸20秒","抱住对面的头，用胸让对方窒息20秒","被对方打屁屁20下","打对方屁屁10下","亲吻对方的手背、手腕、手肘内侧","在身上某个部位任意放一种食物让对方吃掉","在身上某个部位任意放一种食物让对方吃掉","嘴对嘴喂对方酒一杯","用嘴叼着自己的内裤，学狗叫20声","用嘴脱下对方的内裤，并且再用嘴穿上","用舌尖舔过对方嘴唇一圈","用被子把两人裹成寿司卷 30 秒","轻轻咬住对方的耳垂，坚持10秒","穿上一件衣服","脱光光玩10回不准遮挡","脱光光玩10回不准遮挡","脱光光玩5会不准遮挡","揉对方的屁屁5下","亲亲对面的背20下","用脸蹭对方私处20秒","用鼻尖蹭对方私处20秒","用舌尖舔对方私处或者阴蒂20下","被对方隔着内裤揉私处10秒","隔着内裤揉对方私处20秒","伸进对方内裤揉对方私处30秒","打对方的私处3下","给对方种两个草莓","说一个想爱爱的场景","自己站着，对方跪着帮对方口30秒","脱下内裤，用嘴叼着狗爬10圈叫出来","轻咬对方乳头10秒","与对方喝交杯酒","亲吻对方的额头5下","模仿对方生气的样子","抱起对方脚尖离地20秒","用力抱住对方10秒","给对方当人肉坐垫30秒","真心话:觉得自己m属性多一点还是s属性多一点","挠对方痒痒10秒","说一件和对方最想做的十分羞耻的事情","从脖领向对方身体吹气10秒","手指在对方肚子区域滑动20秒","手指在对方背区域滑动30秒","手指在对方胸上滑动20秒","亲对方手背10下","亲对方脚背10下","亲对方脚掌5下","亲对方嘴10下","挠对方痒痒30秒","用力抱对方30秒","金鸡独立玩3局","把对方背起来玩5局","做出吐舌头翻白眼的表情15秒","亲吻对方的脖子20下","在对方耳旁呼气10下","在对方身上做10个俯卧撑","亲对方的双眼","蒙上眼睛1分钟任由对方动手动脚","隔着内裤亲对方的私处30秒","隔着衣服亲对方胸30秒","掰开展示自己私处并且描述它现在是什么状态","趴桌子上翘屁屁让对方打10下","学小狗求对方打自己屁屁10下","叫对方主人，求求对方打自己屁屁10下","用手隔着内裤自慰1分钟给对方看","跪在对方面前手背上，含住对方的牛牛30秒","蒙住双眼，绑住双手，任由对方在自己身上玩3分钟","跪趴摇晃屁股，让对方打15下","亲吻对方锁骨，一路亲到胸口","骑在对方胸口，亲吻大腿根部10下","双手举过头顶，让对方在身上抚摸1分钟","角色扮演，你是主人对方是小狗","角色扮演，你是小狗对方是主人","用舌头画圈舔对方的乳头（隔着衣服也行）","玩一次石头剪刀布，输的人罚两杯酒","用一种奇怪的口音对对方说两句我爱你","用手掌盖住对方的眼睛，给一个惊喜的吻","轻轻咬对方肩膀，留下牙印","在对方耳边用气音说一句最骚的话","模仿猫咪叫声，并且在对方怀里蹭几下","含住对方手指，慢慢吮吸20秒","用鼻尖蹭对方乳沟，深呼吸闻味道","在对方大腿内侧亲吻但不许碰到私处","舌吻同时一只手摸对方屁股40秒","坐对方腿上，面对面舌吻40秒","让对方坐你腿上，面对面舌吻30秒","隔着内裤摸对方私处30秒","用嘴脱掉对方的内裤","把对方衣服脱到只剩内衣","用手指轻轻画圈抚摸对方乳头30秒","让对方趴着，你从后面亲吻后颈","手指伸进对方内裤，轻轻抚摸","捏对方屁股并说一句色色的话","脱掉对方上衣，用胸部蹭对方胸口","让对方把腿抬高，你亲吻大腿根部","用指尖从对方脖子慢慢划到私处","双手同时玩弄对方两个乳头20秒","咬着对方内裤边缘往下拉一点","舔对方乳头30秒","脱掉对方所有衣服，只剩内衣","脱掉对方所有衣服，只剩内裤","把对方内裤拉到一边，直接用舌头进攻","用私处摩擦对方私处1分钟","让对方跪趴把屁股翘高，然后开始舌吻30秒","描述你现在最想用什么姿势操对方","让对方自己掰开下面给你看30秒","把对方腿压到胸口，舔到下面","在对方耳边描述你现在最想对他做什么","深喉练习（只含龟头/阴蒂）10秒","用舌头在对方肚子上写我好爱你","用嘴巴含住对方私处，隔着布料吸","让对方对你讲三句最骚的话","用舌头在对方腿上写'我好爱你'","深喉练习（只含龟头/阴蒂）10秒","用舌头在对方背上写'我好爱你'","边舔对方私处边抬头看着对方的眼睛20秒","互相用手指抚摸对方私处 1 分钟","用口水涂满对方私处慢慢揉30秒","手指插入或者撸对方 40 秒，对方必须看着","亲吻对方的手背、手腕、手肘内侧","把对方按在床上，从后面舔到前面","看着对方自慰30秒（一手揉胸，一手揉/撸下面）","对着对方自慰30秒（一揉手胸，一手揉/撸下面）","让对方把腿张开到最大，你低头深吻大腿根","骑在对方大腿上摩擦30秒","互相用手指抚摸对方私处 1 分钟","隔着内裤舔对方私处30秒","用舌尖在对方乳头周围快速画8字，重复10次","叫对方最色情的昵称","隔着裤子打对方屁屁5下","用舌头舔对方的蛋蛋或者阴蒂15秒","含住对方的蛋蛋或者阴蒂10秒","舔对方私处15秒","用私处蹭对面私处30秒/拖光的","用力坐对面私处上20秒","隔着内裤揉对方下面20秒","揉对方屁股蛋子15秒","对着对方耳垂吹气10下","打对方屁股蛋子10下","说出你敏感部位一个","讲出你做爱喜欢的姿","讲出你的XP一个","用嘴含住对方私处10秒","用私处蹭对面私处30秒/拖光的","当着对方面揉自己的胸30秒","用嘴巴给对方喂酒一杯","罚酒三杯","吸咬对方乳头20秒",
+            "用舌头从对方脖子慢慢舔到耳垂，持续30秒","嘴里含一口酒，然后喂给对方","用嘴巴帮对方脱掉1件衣服，不能用手","在对方大腿内侧轻轻咬1口，然后用舌头安慰，持续15秒","给对方买一件情趣内衣现穿","让对方决定下一杯喝多少","对着对面说两句骚话","用嘴叼着内裤，学小狗叫转10圈","坐在对方腿上前后磨蹭1分钟","用手指轻轻划过对方乳头，环圈10次","用胸部在对方脸上摩擦30秒","用嘴脱掉对方的内裤","双手捧着对方的屁屁，用力揉捏1分钟","轻轻打对方屁屁10下，每打一下亲吻1下","用嘴唇从脚趾慢慢亲到对方大腿根","双手从背后把对方抱住，慢慢抚摸胸部，20秒","用牙齿轻轻拉扯对方内裤边缘","坐对方身上，双腿缠绕着腰摩擦40秒","用手指在对方私密部位轻轻按压打圈","趴着让对方亲吻背部20秒","说出你的XP","罚酒两杯","公主抱对方20秒，没撑住不算","说说你的XP","用舌头轻舔对方乳沟，持续45秒","用指尖轻刮对方大腿内侧30秒","双手慢慢从自己脖子滑到私处，再按揉20秒","轻轻亲啄对方乳晕","跟对方舌吻20秒","轻啄对面嘴唇15下","双方共罚一杯酒","坐在对方身上，用下面隔着内裤摩擦对方私处","反弹下一次的惩罚","指定对面做一个动作","下一局双倍惩罚下一局双倍惩罚","亲吻对方下面的毛毛10下","双手捧脸深吻对方的同时，身体紧贴摩擦对方20秒","让对方趴着，骑在对方背上，亲吻对方脖子30秒","下一局双倍惩罚","M腿让对方揉阴蒂20秒","被对方隔着内裤揉/撸30秒","给对方身上种一颗草莓","用牙齿轻咬对方肩膀留下浅印","从抽到开始，抱到镜子面前，站着亲吻20秒","用手指轻轻弹对方的乳头10下","用胸部压着对方的背摩擦20秒","弹对方两个脑瓜崩","用舌头在对方的阴蒂/，龟头上绕30圈","亲吻对方锁骨并吮吸","轻打对方大腿内侧10下","从后面抱住对方，一手揉胸，一手揉下边20秒","下一局双倍惩罚","轻咬对方腰侧肉30秒","用私密部位拍打对方脸颊20下","用指尖轻轻划过对方背部15秒","双手在对方大腿内侧按摩20秒","给对方捶背1分钟","自慰给对方看1分钟","用指尖轻捏对方乳头30秒","吸吮对方耳后根30秒","翘着屁屁把私密部位给对方看40秒","把对方双腿扛肩上，亲吻大腿内侧1分钟","用色情脏话骂对方5句","给对方展示慢慢从自己胸部抚摸到私密部位按揉30秒","男生把牛牛左右摇摆20秒","男生把牛牛上下摆20秒","男生把牛牛摸硬","用力允吸对方乳头30秒","轻咬对方肩膀，同时揉胸20秒","把腿张开让对方看自己自摸，然后亲20秒","双手从后面揉入对方胸部同时轻咬脖子40秒","吮吸对方大腿内侧肉肉30秒","让对方把自己抱起来，双脚缠腰走到镜子面前，持续20秒","亲吻对方嘴20秒","双手在对方腰窝处按摩40秒","轻咬对方耳廓30秒","用私密部位在对方肚子上画圈，画10圈","亲吻对方脚底板10下","轻拍对方脸颊，深吻20秒","推倒对方四肢张开，亲遍全身","亲吻对方嘎吱窝10下","让对方舌头吐出来，亲吻舌头20下","吮吸对方舌头20秒","轻打对方胸部5下","把对方压到墙上，抬腿亲私处50秒","用舌头舔对方鼻梁五下","自己用手掰开私处给对方展示30秒","亲吻对方脚踝","轻咬对方肩膀留下印子","亲吻对方耳朵30秒","把对方双手按头上，亲全身","把对方抱起来，让双腿缠腰50秒","在对方肚子上用口红或者笔写上'操我'","吮吸对方乳头到发硬","本局想个骚称呼，让对方叫自己一整局","亲吻对方的眉毛10下","下一局双倍惩罚","亲吻对方小腹10下","用手在对方背上写字，没猜到就打10下屁屁","把对方当马骑10圈","被对方当马骑10圈","用力打对方屁屁，留下印子","把对方压在墙上，抬起一条腿亲私处10下","隔着内裤在对方私处上摩擦40秒","亲吻对方腋下5次","下一局双倍惩罚","用屁屁坐对方脸上15秒","用嘴衔起食物，叼到对方嘴里","这一局你是小狗，对方是主人","这一局你是主人，对方是小狗","用指尖划过对方全身","下一局双倍惩罚"
         ];
 
-        // ==================== 原固定惩罚 ====================
         var newFixedRewards = [
-            "亲亲对方脸蛋4下😚", "亲亲对方脸蛋4下😚", "亲亲对方脸蛋4下😚",
-            "舌吻20秒👅", "舌吻20秒👅",
-            "声情并茂的向对方说我爱你❤️", "声情并茂的向对方说我爱你❤️",
+            "亲亲对方脸蛋4下😚","亲亲对方脸蛋4下😚","亲亲对方脸蛋4下😚",
+            "舌吻20秒👅","舌吻20秒👅",
+            "声情并茂的向对方说我爱你❤️","声情并茂的向对方说我爱你❤️",
             "抱起对方转4圈，中断不算🤗",
             "脱光身上衣物，只保留袜子😍",
-            "穿上一件衣服或指定对方脱下一件衣服😋",
-            "穿上一件衣服或指定对方脱下一件衣服😋",
-            "穿上一件衣服或指定对方脱下一件衣服😋",
-            "指定对方穿上某件衣服或者脱下某件衣服🤤",
-            "指定对方穿上某件衣服或者脱下某件衣服🤤",
-            "用下面蹭对方下面1分钟", "用下面蹭对方下面1分钟",
-            "用力打对方屁屁5下🖐️", "用力打对方屁屁5下🖐️",
-            "自己跪趴着翘起屁屁，然后自己打5下，必须打响💔",
-            "自己跪趴着翘起屁屁，然后自己打5下，必须打响💔",
-            "反弹炸弹（下回合抽到的惩罚反弹对方）🎉",
-            "反弹炸弹（下回合抽到的惩罚反弹对方）🎉",
-            "挠对方痒30秒，对方笑了就重来😖",
-            "挠对方痒30秒，对方笑了就重来😖",
-            "对方什么行为会让你产生涩涩的想法",
-            "对方什么行为会让你产生涩涩的想法",
-            "提问对方涩涩真心话（涩涩有关）",
-            "提问对方涩涩真心话（涩涩有关）",
-            "说出一个你对对方产生性幻想的场景",
-            "说出一个你对对方产生性幻想的场景",
+            "穿上一件衣服或指定对方脱下一件衣服😋","穿上一件衣服或指定对方脱下一件衣服😋","穿上一件衣服或指定对方脱下一件衣服😋",
+            "指定对方穿上某件衣服或者脱下某件衣服🤤","指定对方穿上某件衣服或者脱下某件衣服🤤",
+            "用下面蹭对方下面1分钟","用下面蹭对方下面1分钟",
+            "用力打对方屁屁5下🖐️","用力打对方屁屁5下🖐️",
+            "自己跪趴着翘起屁屁，然后自己打5下，必须打响💔","自己跪趴着翘起屁屁，然后自己打5下，必须打响💔",
+            "反弹炸弹（下回合抽到的惩罚反弹对方）🎉","反弹炸弹（下回合抽到的惩罚反弹对方）🎉",
+            "挠对方痒30秒，对方笑了就重来😖","挠对方痒30秒，对方笑了就重来😖",
+            "对方什么行为会让你产生涩涩的想法","对方什么行为会让你产生涩涩的想法",
+            "提问对方涩涩真心话（涩涩有关）","提问对方涩涩真心话（涩涩有关）",
+            "说出一个你对对方产生性幻想的场景","说出一个你对对方产生性幻想的场景"
         ];
 
         const TOTAL_BOMBS = 200;
@@ -1052,7 +669,7 @@
         const SETTINGS_KEY = "coupleBlindBoxSettings_v3";
 
         var fixedRewards = [];
-        var specialRewards = [];   // 现在是真实数组，一条一条
+        var specialRewards = [];
         var randomRewards = [];
 
         var editType = null;
@@ -1187,7 +804,7 @@
             btn.style.background = 'linear-gradient(90deg, #ff6b81, #ff8e9e)';
         }
 
-        // ==================== 设置页面逻辑 ====================
+        // ==================== 设置逻辑 ====================
         function openSettings() {
             inSettingsMode = true;
             inDetailMode = false;
@@ -1209,7 +826,7 @@
         }
 
         function renderSettingsMain() {
-            var html = `
+            document.getElementById('settings-main').innerHTML = `
                 <div class="settings-card" onclick="openDetail('fixed')">
                     <div class="settings-card-left">
                         <div class="settings-card-title">固定惩罚</div>
@@ -1232,7 +849,6 @@
                     <div class="settings-card-arrow">›</div>
                 </div>
             `;
-            document.getElementById('settings-main').innerHTML = html;
         }
 
         function openDetail(type) {
@@ -1241,13 +857,11 @@
             window.history.pushState({ settings: true, detail: type }, "");
             document.getElementById('settings-screen').style.display = 'none';
             document.getElementById('settings-detail-screen').style.display = 'flex';
-
-            var titles = {
+            document.getElementById('detail-title').textContent = {
                 fixed: '固定惩罚',
                 special: '特殊奖励',
                 random: '随机惩罚'
-            };
-            document.getElementById('detail-title').textContent = titles[type];
+            }[type];
             renderDetailList();
         }
 
@@ -1261,19 +875,10 @@
 
         function renderDetailList() {
             var body = document.getElementById('settings-detail-body');
-            var list = [];
-            var canDelete = false;
-            var canAdd = false;
-
-            if (currentDetailType === 'fixed') {
-                list = fixedRewards;
-            } else if (currentDetailType === 'special') {
-                list = specialRewards;
-            } else if (currentDetailType === 'random') {
-                list = randomRewards;
-                canDelete = true;
-                canAdd = true;
-            }
+            var list = currentDetailType === 'fixed' ? fixedRewards :
+                       currentDetailType === 'special' ? specialRewards : randomRewards;
+            var canDelete = currentDetailType === 'random';
+            var canAdd = currentDetailType === 'random';
 
             var html = '';
             if (list.length === 0) {
@@ -1290,20 +895,14 @@
                     html += '</div></div>';
                 });
             }
-
             if (canAdd) {
                 html += '<button class="add-btn" onclick="openEditModal(\'random\', -1)">＋ 添加随机惩罚</button>';
             }
-
             body.innerHTML = html;
         }
 
         function escapeHtml(str) {
-            return String(str)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;');
+            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
         }
 
         function openEditModal(type, index) {
@@ -1311,19 +910,16 @@
             editIndex = index;
             var title = document.getElementById('edit-title');
             var input = document.getElementById('edit-input');
-
             if (type === 'random' && index === -1) {
                 title.textContent = '添加随机惩罚';
                 input.value = '';
             } else {
                 title.textContent = '编辑内容';
-                if (type === 'fixed') input.value = fixedRewards[index];
-                else if (type === 'special') input.value = specialRewards[index];
-                else if (type === 'random') input.value = randomRewards[index];
+                input.value = type === 'fixed' ? fixedRewards[index] :
+                              type === 'special' ? specialRewards[index] : randomRewards[index];
             }
-
             document.getElementById('edit-modal').style.display = 'flex';
-            setTimeout(function() { input.focus(); }, 80);
+            setTimeout(function(){ input.focus(); }, 80);
         }
 
         function closeEditModal() {
@@ -1334,30 +930,16 @@
 
         function saveEdit() {
             var text = document.getElementById('edit-input').value.trim();
-            if (!text) {
-                alert('请输入内容');
-                return;
+            if (!text) { alert('请输入内容'); return; }
+            if (editType === 'fixed') fixedRewards[editIndex] = text;
+            else if (editType === 'special') specialRewards[editIndex] = text;
+            else if (editType === 'random') {
+                if (editIndex === -1) randomRewards.push(text);
+                else randomRewards[editIndex] = text;
             }
-
-            if (editType === 'fixed') {
-                fixedRewards[editIndex] = text;
-            } else if (editType === 'special') {
-                specialRewards[editIndex] = text;
-            } else if (editType === 'random') {
-                if (editIndex === -1) {
-                    randomRewards.push(text);
-                } else {
-                    randomRewards[editIndex] = text;
-                }
-            }
-
             saveSettings();
             closeEditModal();
             renderDetailList();
-            // 同时更新主页数字
-            if (document.getElementById('settings-screen').style.display === 'flex') {
-                renderSettingsMain();
-            }
         }
 
         function openConfirmModal(type, index) {
@@ -1381,7 +963,6 @@
             renderDetailList();
         }
 
-        // ==================== 返回键 ====================
         window.addEventListener('popstate', function () {
             const modal = document.getElementById('result-modal');
             const editModal = document.getElementById('edit-modal');
@@ -1397,25 +978,13 @@
                 closeConfirmModal();
                 return;
             }
-
             if (inGameMode && modal.style.display === 'flex') {
                 history.pushState(null, null, location.href);
                 return;
             }
-
-            if (inGameMode) {
-                closeGameView();
-                return;
-            }
-
-            if (inDetailMode) {
-                closeDetail();
-                return;
-            }
-
-            if (inSettingsMode) {
-                closeSettings();
-            }
+            if (inGameMode) { closeGameView(); return; }
+            if (inDetailMode) { closeDetail(); return; }
+            if (inSettingsMode) { closeSettings(); }
         });
 
         function startGame() {
@@ -1436,33 +1005,24 @@
         function initGame() {
             currentPlayer = 1;
             openedCount = 0;
-
             var display = document.getElementById('turn-display');
             display.innerText = "当前轮到：男生";
             display.style.color = 'var(--primary-color)';
 
             let rewards = [];
-
-            // 随机惩罚：最多取100条
             let shuffledPool = [...randomRewards];
             for (let i = shuffledPool.length - 1; i > 0; i--) {
                 let j = Math.floor(Math.random() * (i + 1));
                 [shuffledPool[i], shuffledPool[j]] = [shuffledPool[j], shuffledPool[i]];
             }
             rewards.push(...shuffledPool.slice(0, Math.min(100, shuffledPool.length)));
-
-            // 固定惩罚全部加入
             rewards.push(...fixedRewards);
-
-            // 特殊奖励全部加入（现在是真实数组）
             rewards.push(...specialRewards);
 
-            // 打乱
             for (let i = rewards.length - 1; i > 0; i--) {
                 let j = Math.floor(Math.random() * (i + 1));
                 [rewards[i], rewards[j]] = [rewards[j], rewards[i]];
             }
-
             rewards = rewards.slice(0, TOTAL_BOMBS);
 
             var container = document.getElementById('grid-container');
@@ -1479,75 +1039,35 @@
                     var classList = this.classList;
                     var alreadyOpened = false;
                     for (var i = 0; i < classList.length; i++) {
-                        if (classList[i].indexOf('opened-') === 0) {
-                            alreadyOpened = true;
-                            break;
-                        }
+                        if (classList[i].indexOf('opened-') === 0) { alreadyOpened = true; break; }
                     }
                     if (alreadyOpened) return;
 
                     if (navigator.vibrate) navigator.vibrate(45);
                     openedCount++;
-
                     var rewardText = this.getAttribute('data-reward');
 
-                    if (rewardText.includes("亲亲对方脸蛋4下")) {
-                        this.className = 'bomb-item opened-kiss4';
-                        this.innerText = '😚';
-                    } else if (rewardText.includes("舌吻20秒")) {
-                        this.className = 'bomb-item opened-tonguekiss';
-                        this.innerText = '👅';
-                    } else if (rewardText.includes("说我爱你")) {
-                        this.className = 'bomb-item opened-iloveyou';
-                        this.innerText = '❤️';
-                    } else if (rewardText.includes("抱起对方转")) {
-                        this.className = 'bomb-item opened-hugspin';
-                        this.innerText = '🤗';
-                    } else if (rewardText.includes("只保留袜子")) {
-                        this.className = 'bomb-item opened-nude-socks';
-                        this.innerText = '😍';
-                    } else if (rewardText.includes("穿上一件衣服") || rewardText.includes("指定对方")) {
-                        this.className = 'bomb-item opened-cloth';
-                        this.innerText = '😋';
-                    } else if (rewardText.includes("用下面蹭对方下面")) {
-                        this.className = 'bomb-item opened-face-rub';
-                        this.innerText = '😍';
-                    } else if (rewardText.includes("打对方屁屁5下")) {
-                        this.className = 'bomb-item opened-spank';
-                        this.innerText = '🖐️';
-                    } else if (rewardText.includes("自己跪趴着")) {
-                        this.className = 'bomb-item opened-selfspank';
-                        this.innerText = '💔';
-                    } else if (rewardText.includes("反弹炸弹")) {
-                        this.className = 'bomb-item opened-rebound';
-                        this.innerText = '🎉';
-                    } else if (rewardText.includes("挠对方痒")) {
-                        this.className = 'bomb-item opened-tickle';
-                        this.innerText = '😖';
-                    } else if (rewardText === "你很幸运，没有踩雷") {
-                        this.className = 'bomb-item opened-safe';
-                        this.innerText = '✅';
-                    } else if (rewardText === "罚酒一杯") {
-                        this.className = 'bomb-item opened-drink';
-                        this.innerText = '🍺';
-                    } else if (rewardText === "脱掉一件衣服") {
-                        this.className = 'bomb-item opened-strip';
-                        this.innerText = '👕';
-                    } else if (rewardText === "说出一个你的XP") {
-                        this.className = 'bomb-item opened-xp';
-                        this.innerText = '😈';
-                    } else if (rewardText === "下回合双倍") {
-                        this.className = 'bomb-item opened-double';
-                        this.innerText = '⚡';
-                    } else {
-                        this.className = 'bomb-item opened';
-                        this.innerText = '🤪';
-                    }
+                    if (rewardText.includes("亲亲对方脸蛋4下")) { this.className = 'bomb-item opened-kiss4'; this.innerText = '😚'; }
+                    else if (rewardText.includes("舌吻20秒")) { this.className = 'bomb-item opened-tonguekiss'; this.innerText = '👅'; }
+                    else if (rewardText.includes("说我爱你")) { this.className = 'bomb-item opened-iloveyou'; this.innerText = '❤️'; }
+                    else if (rewardText.includes("抱起对方转")) { this.className = 'bomb-item opened-hugspin'; this.innerText = '🤗'; }
+                    else if (rewardText.includes("只保留袜子")) { this.className = 'bomb-item opened-nude-socks'; this.innerText = '😍'; }
+                    else if (rewardText.includes("穿上一件衣服") || rewardText.includes("指定对方")) { this.className = 'bomb-item opened-cloth'; this.innerText = '😋'; }
+                    else if (rewardText.includes("用下面蹭对方下面")) { this.className = 'bomb-item opened-face-rub'; this.innerText = '😍'; }
+                    else if (rewardText.includes("打对方屁屁5下")) { this.className = 'bomb-item opened-spank'; this.innerText = '🖐️'; }
+                    else if (rewardText.includes("自己跪趴着")) { this.className = 'bomb-item opened-selfspank'; this.innerText = '💔'; }
+                    else if (rewardText.includes("反弹炸弹")) { this.className = 'bomb-item opened-rebound'; this.innerText = '🎉'; }
+                    else if (rewardText.includes("挠对方痒")) { this.className = 'bomb-item opened-tickle'; this.innerText = '😖'; }
+                    else if (rewardText === "你很幸运，没有踩雷") { this.className = 'bomb-item opened-safe'; this.innerText = '✅'; }
+                    else if (rewardText === "罚酒一杯") { this.className = 'bomb-item opened-drink'; this.innerText = '🍺'; }
+                    else if (rewardText === "脱掉一件衣服") { this.className = 'bomb-item opened-strip'; this.innerText = '👕'; }
+                    else if (rewardText === "说出一个你的XP") { this.className = 'bomb-item opened-xp'; this.innerText = '😈'; }
+                    else if (rewardText === "下回合双倍") { this.className = 'bomb-item opened-double'; this.innerText = '⚡'; }
+                    else { this.className = 'bomb-item opened'; this.innerText = '🤪'; }
 
                     document.getElementById('result-text').innerHTML = formatRewardText(rewardText);
                     const modal = document.getElementById('result-modal');
                     modal.style.display = 'flex';
-
                     const btn = document.getElementById('confirm-btn');
                     const closeBtn = document.querySelector('.close-btn');
                     document.getElementById('countdown').style.display = 'none';
@@ -1577,7 +1097,6 @@
                         }, 600);
                     }
                 };
-
                 container.appendChild(bomb);
             }
         }
