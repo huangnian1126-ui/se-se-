@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+< lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -1108,6 +1108,19 @@
         }
 
         window.history.replaceState({ active: false }, "");
-    </script>
+
+    // ==================== 注册 Service Worker（必须有，才能安装到桌面） ====================
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('./sw.js')
+                .then(function(reg) {
+                    console.log('Service Worker 注册成功');
+                })
+                .catch(function(err) {
+                    console.log('Service Worker 注册失败:', err);
+                });
+        });
+    }
+</script>
 </body>
 </html>
