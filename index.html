@@ -237,7 +237,6 @@
             }
         }
 
-/* 右上角关闭按钮 - 去掉圆形背景 */
         .close-btn {
             position: absolute;
             top: 16px;
@@ -292,18 +291,280 @@
             color:#3b82f6;
             font-weight:bold;
         }
+
+        /* ========== 设置页面 ========== */
+        #settings-screen, #settings-detail-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: none;
+            flex-direction: column;
+            background-color: var(--bg-color);
+            z-index: 30;
+            overflow: hidden;
+        }
+
+        .settings-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px 18px 14px;
+            background: rgba(255,255,255,0.96);
+            box-shadow: 0 2px 14px rgba(0,0,0,0.06);
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+
+        .settings-header h2 {
+            margin: 0;
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .settings-body {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 20px 16px 40px;
+            box-sizing: border-box;
+        }
+
+        /* 设置主页三个大卡片 */
+        .settings-main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            gap: 18px;
+            padding: 0 24px;
+            box-sizing: border-box;
+        }
+
+        .settings-card {
+            width: 100%;
+            max-width: 340px;
+            background: white;
+            border-radius: 20px;
+            padding: 26px 22px;
+            box-shadow: 0 10px 28px rgba(0,0,0,0.08),
+                        0 2px 6px rgba(255,107,129,0.08);
+            border: 1px solid rgba(0,0,0,0.04);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .settings-card:active {
+            transform: scale(0.97);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+        }
+
+        .settings-card-left {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .settings-card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .settings-card-count {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .settings-card-arrow {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            font-weight: 300;
+        }
+
+        /* 详情页列表 */
+        .punish-card {
+            background: white;
+            border-radius: 16px;
+            padding: 14px 14px 14px 16px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .punish-text {
+            flex: 1;
+            font-size: 0.95rem;
+            color: #333;
+            line-height: 1.45;
+            word-break: break-all;
+        }
+
+        .punish-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .punish-btn {
+            padding: 7px 12px;
+            font-size: 0.82rem;
+            border-radius: 16px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: none;
+        }
+
+        .punish-btn.edit {
+            background: #f0e6ff;
+            color: var(--secondary-color);
+        }
+
+        .punish-btn.delete {
+            background: #ffe6ea;
+            color: var(--primary-color);
+        }
+
+        .add-btn {
+            width: 100%;
+            margin-top: 10px;
+            margin-bottom: 8px;
+            padding: 14px 0;
+            font-size: 1.05rem;
+            border-radius: 22px;
+            background: linear-gradient(90deg, #ff6b81, #ff8e9e);
+            box-shadow: 0 4px 14px rgba(255,107,129,0.25);
+        }
+
+        .empty-tip {
+            text-align: center;
+            color: #999;
+            font-size: 0.95rem;
+            padding: 40px 0;
+        }
+
+        /* 添加/编辑弹窗 */
+        #edit-modal .modal-content {
+            padding: 28px 22px 24px;
+        }
+
+        #edit-modal h3 {
+            margin: 0 0 18px;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+
+        #edit-input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 14px 16px;
+            border: 2px solid #f0e0e6;
+            border-radius: 16px;
+            font-size: 1rem;
+            outline: none;
+            margin-bottom: 20px;
+            resize: none;
+            min-height: 90px;
+            font-family: inherit;
+            line-height: 1.5;
+        }
+
+        #edit-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .edit-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .edit-actions button {
+            flex: 1;
+            padding: 13px 0;
+            font-size: 1rem;
+            border-radius: 22px;
+        }
+
+        .edit-actions .cancel-btn {
+            background: #f0f0f0;
+            color: #666;
+            box-shadow: none;
+        }
+
+        /* 删除确认弹窗 */
+        #confirm-modal .modal-content {
+            padding: 32px 24px 26px;
+        }
+
+        #confirm-modal p {
+            font-size: 1.1rem;
+            color: #333;
+            margin: 0 0 24px;
+            line-height: 1.5;
+        }
+
+        .confirm-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .confirm-actions button {
+            flex: 1;
+            padding: 13px 0;
+            font-size: 1rem;
+            border-radius: 22px;
+        }
+
+        .confirm-actions .cancel-btn {
+            background: #f0f0f0;
+            color: #666;
+            box-shadow: none;
+        }
+
+        .confirm-actions .danger-btn {
+            background: linear-gradient(90deg, #ff4757, #ff6b81);
+        }
+
+        /* 首页按钮 */
+        .home-start-btn {
+            padding: 18px 56px;
+            font-size: 1.35rem;
+            border-radius: 32px;
+            box-shadow: 0 8px 20px rgba(255, 107, 129, 0.35);
+        }
+
+        .home-settings-btn {
+            margin-top: 20px;
+            padding: 14px 42px;
+            font-size: 1.1rem;
+            background: linear-gradient(90deg, #a55eea, #c39bff);
+            box-shadow: 0 6px 16px rgba(165, 94, 234, 0.3);
+            border-radius: 28px;
+        }
     </style>
 </head>
 <body>
 
     <div id="home-screen">
-        <h1 style="padding-top: 0; margin-bottom: 40px;">情侣盲盒</h1>
-        <button onclick="startGame()">开始游戏</button>
+        <h1 style="padding-top: 0; margin-bottom: 48px;">情侣盲盒</h1>
+        <button class="home-start-btn" onclick="startGame()">开始游戏</button>
+        <button class="home-settings-btn" onclick="openSettings()">设置</button>
     </div>
 
     <div id="game-screen">
         <div class="status-panel" id="turn-display">
-            当前轮到：念子
+            当前轮到：男生
         </div>
         
         <div class="grid-wrapper">
@@ -311,6 +572,27 @@
         </div>
     </div>
 
+    <!-- 设置主页 -->
+    <div id="settings-screen">
+        <div class="settings-header">
+            <h2>设置</h2>
+        </div>
+        <div class="settings-main" id="settings-main">
+            <!-- 动态渲染三个大卡片 -->
+        </div>
+    </div>
+
+    <!-- 设置详情页 -->
+    <div id="settings-detail-screen">
+        <div class="settings-header">
+            <h2 id="detail-title">详情</h2>
+        </div>
+        <div class="settings-body" id="settings-detail-body">
+            <!-- 动态渲染列表 -->
+        </div>
+    </div>
+
+    <!-- 结果弹窗 -->
     <div class="modal" id="result-modal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal()">×</button>
@@ -325,13 +607,39 @@
         </div>
     </div>
 
+    <!-- 添加/编辑弹窗 -->
+    <div class="modal" id="edit-modal">
+        <div class="modal-content">
+            <h3 id="edit-title">编辑</h3>
+            <textarea id="edit-input" placeholder="请输入惩罚内容……" rows="4"></textarea>
+            <div class="edit-actions">
+                <button class="cancel-btn" onclick="closeEditModal()">取消</button>
+                <button onclick="saveEdit()">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 删除确认弹窗 -->
+    <div class="modal" id="confirm-modal">
+        <div class="modal-content">
+            <p>确定要删除这条惩罚吗？</p>
+            <div class="confirm-actions">
+                <button class="cancel-btn" onclick="closeConfirmModal()">取消</button>
+                <button class="danger-btn" onclick="doDelete()">确定删除</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         var currentPlayer = 1;
         var openedCount = 0;
         var inGameMode = false; 
+        var inSettingsMode = false;
+        var inDetailMode = false;
+        var currentDetailType = null; // 'fixed' | 'special' | 'random'
         var countdownInterval = null;
 
-        // ==================== 自定义惩罚（完整无删减）====================
+        // ==================== 原随机惩罚完整数据 ====================
         var bigRewardPool = [
             "讲出你的XP一个",
             "用嘴含住对方私处10秒",
@@ -706,7 +1014,7 @@
             "下一局双倍惩罚"
         ];
 
-        // ==================== 新增的24条固定惩罚 ====================
+        // ==================== 原固定惩罚 ====================
         var newFixedRewards = [
             "亲亲对方脸蛋4下😚", "亲亲对方脸蛋4下😚", "亲亲对方脸蛋4下😚",
             "舌吻20秒👅", "舌吻20秒👅",
@@ -735,11 +1043,66 @@
         ];
 
         const TOTAL_BOMBS = 200;
-        const NUM_SAFE = 30;
-        const NUM_DRINK = 30;
+        const NUM_SAFE = 27;
+        const NUM_DRINK = 27;
         const NUM_STRIP = 8;
         const NUM_XP = 3;
         const NUM_DOUBLE = 5;
+
+        const SETTINGS_KEY = "coupleBlindBoxSettings_v3";
+
+        var fixedRewards = [];
+        var specialRewards = [];   // 现在是真实数组，一条一条
+        var randomRewards = [];
+
+        var editType = null;
+        var editIndex = -1;
+        var deleteType = null;
+        var deleteIndex = -1;
+
+        function createSpecialArray() {
+            var arr = [];
+            for (var i = 0; i < NUM_SAFE; i++) arr.push("你很幸运，没有踩雷");
+            for (var i = 0; i < NUM_DRINK; i++) arr.push("罚酒一杯");
+            for (var i = 0; i < NUM_STRIP; i++) arr.push("脱掉一件衣服");
+            for (var i = 0; i < NUM_XP; i++) arr.push("说出一个你的XP");
+            for (var i = 0; i < NUM_DOUBLE; i++) arr.push("下回合双倍");
+            return arr;
+        }
+
+        function loadSettings() {
+            try {
+                var saved = localStorage.getItem(SETTINGS_KEY);
+                if (saved) {
+                    var data = JSON.parse(saved);
+                    fixedRewards = Array.isArray(data.fixed) ? data.fixed : [...newFixedRewards];
+                    specialRewards = Array.isArray(data.special) ? data.special : createSpecialArray();
+                    randomRewards = Array.isArray(data.random) ? data.random : [...bigRewardPool];
+                } else {
+                    fixedRewards = [...newFixedRewards];
+                    specialRewards = createSpecialArray();
+                    randomRewards = [...bigRewardPool];
+                    saveSettings();
+                }
+            } catch (e) {
+                fixedRewards = [...newFixedRewards];
+                specialRewards = createSpecialArray();
+                randomRewards = [...bigRewardPool];
+                saveSettings();
+            }
+        }
+
+        function saveSettings() {
+            try {
+                localStorage.setItem(SETTINGS_KEY, JSON.stringify({
+                    fixed: fixedRewards,
+                    special: specialRewards,
+                    random: randomRewards
+                }));
+            } catch (e) {}
+        }
+
+        loadSettings();
 
         function isTimedPunishment(text) {
             return /[\d]+[秒分钟]/.test(text);
@@ -766,7 +1129,7 @@
                     gainNode.connect(audioCtx.destination);
                     gainNode.gain.value = 0.2;
                     oscillator.start();
-                    setTimeout(() => { oscillator.stop(); }, 150);
+                    setTimeout(() => oscillator.stop(), 150);
                     count++;
                     if (count >= 6) clearInterval(ring);
                 }, 300);
@@ -777,34 +1140,36 @@
             const countdownEl = document.getElementById('countdown');
             const btn = document.getElementById('confirm-btn');
             const closeBtn = document.querySelector('.close-btn');
-            
             let timeLeft = seconds;
 
             countdownEl.style.display = 'flex';
-            closeBtn.style.display = 'flex';   // 显示关闭按钮
+            closeBtn.style.display = 'flex';
             btn.textContent = "进行中...";
             btn.disabled = true;
 
             if (countdownInterval) clearInterval(countdownInterval);
+            countdownEl.textContent = timeLeft;
 
             countdownInterval = setInterval(() => {
-                countdownEl.textContent = timeLeft;
                 timeLeft--;
-
-                if (timeLeft < 0) {
+                if (timeLeft <= 0) {
                     clearInterval(countdownInterval);
-                    countdownEl.style.display = 'none';
-                    closeBtn.style.display = 'none';   // 结束时隐藏关闭按钮
-                    btn.textContent = "确定";
-                    btn.disabled = false;
-                    btn.style.background = 'linear-gradient(90deg, #ff6b81, #ff8e9e)';
-                    btn.onclick = closeModal;
-                    playAlarm();
-                    if (navigator.vibrate) navigator.vibrate([80, 60, 120]);
+                    countdownInterval = null;
+                    countdownEl.textContent = "0";
+                    setTimeout(() => {
+                        countdownEl.style.display = 'none';
+                        closeBtn.style.display = 'none';
+                        btn.textContent = "确定";
+                        btn.disabled = false;
+                        btn.style.background = 'linear-gradient(90deg, #ff6b81, #ff8e9e)';
+                        btn.onclick = closeModal;
+                        playAlarm();
+                        if (navigator.vibrate) navigator.vibrate([80, 60, 120]);
+                    }, 1000);
+                    return;
                 }
+                countdownEl.textContent = timeLeft;
             }, 1000);
-
-            countdownEl.textContent = timeLeft;
         }
 
         function closeModal() {
@@ -815,14 +1180,242 @@
             document.getElementById('result-modal').style.display = 'none';
             document.getElementById('countdown').style.display = 'none';
             document.querySelector('.close-btn').style.display = 'none';
+            const btn = document.getElementById('confirm-btn');
+            btn.disabled = false;
+            btn.textContent = "确认";
+            btn.onclick = closeModal;
+            btn.style.background = 'linear-gradient(90deg, #ff6b81, #ff8e9e)';
         }
 
+        // ==================== 设置页面逻辑 ====================
+        function openSettings() {
+            inSettingsMode = true;
+            inDetailMode = false;
+            window.history.pushState({ settings: true }, "");
+            document.getElementById('home-screen').style.display = 'none';
+            document.getElementById('settings-detail-screen').style.display = 'none';
+            document.getElementById('settings-screen').style.display = 'flex';
+            renderSettingsMain();
+        }
+
+        function closeSettings() {
+            document.getElementById('settings-screen').style.display = 'none';
+            document.getElementById('settings-detail-screen').style.display = 'none';
+            document.getElementById('home-screen').style.display = 'flex';
+            inSettingsMode = false;
+            inDetailMode = false;
+            closeEditModal();
+            closeConfirmModal();
+        }
+
+        function renderSettingsMain() {
+            var html = `
+                <div class="settings-card" onclick="openDetail('fixed')">
+                    <div class="settings-card-left">
+                        <div class="settings-card-title">固定惩罚</div>
+                        <div class="settings-card-count">${fixedRewards.length} 条</div>
+                    </div>
+                    <div class="settings-card-arrow">›</div>
+                </div>
+                <div class="settings-card" onclick="openDetail('special')">
+                    <div class="settings-card-left">
+                        <div class="settings-card-title">特殊奖励</div>
+                        <div class="settings-card-count">${specialRewards.length} 条</div>
+                    </div>
+                    <div class="settings-card-arrow">›</div>
+                </div>
+                <div class="settings-card" onclick="openDetail('random')">
+                    <div class="settings-card-left">
+                        <div class="settings-card-title">随机惩罚</div>
+                        <div class="settings-card-count">${randomRewards.length} 条</div>
+                    </div>
+                    <div class="settings-card-arrow">›</div>
+                </div>
+            `;
+            document.getElementById('settings-main').innerHTML = html;
+        }
+
+        function openDetail(type) {
+            currentDetailType = type;
+            inDetailMode = true;
+            window.history.pushState({ settings: true, detail: type }, "");
+            document.getElementById('settings-screen').style.display = 'none';
+            document.getElementById('settings-detail-screen').style.display = 'flex';
+
+            var titles = {
+                fixed: '固定惩罚',
+                special: '特殊奖励',
+                random: '随机惩罚'
+            };
+            document.getElementById('detail-title').textContent = titles[type];
+            renderDetailList();
+        }
+
+        function closeDetail() {
+            document.getElementById('settings-detail-screen').style.display = 'none';
+            document.getElementById('settings-screen').style.display = 'flex';
+            inDetailMode = false;
+            currentDetailType = null;
+            renderSettingsMain();
+        }
+
+        function renderDetailList() {
+            var body = document.getElementById('settings-detail-body');
+            var list = [];
+            var canDelete = false;
+            var canAdd = false;
+
+            if (currentDetailType === 'fixed') {
+                list = fixedRewards;
+            } else if (currentDetailType === 'special') {
+                list = specialRewards;
+            } else if (currentDetailType === 'random') {
+                list = randomRewards;
+                canDelete = true;
+                canAdd = true;
+            }
+
+            var html = '';
+            if (list.length === 0) {
+                html = '<div class="empty-tip">暂无内容</div>';
+            } else {
+                list.forEach(function(text, idx) {
+                    html += '<div class="punish-card">' +
+                        '<div class="punish-text">' + escapeHtml(text) + '</div>' +
+                        '<div class="punish-actions">' +
+                            '<button class="punish-btn edit" onclick="openEditModal(\'' + currentDetailType + '\',' + idx + ')">编辑</button>';
+                    if (canDelete) {
+                        html += '<button class="punish-btn delete" onclick="openConfirmModal(\'' + currentDetailType + '\',' + idx + ')">删除</button>';
+                    }
+                    html += '</div></div>';
+                });
+            }
+
+            if (canAdd) {
+                html += '<button class="add-btn" onclick="openEditModal(\'random\', -1)">＋ 添加随机惩罚</button>';
+            }
+
+            body.innerHTML = html;
+        }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        function openEditModal(type, index) {
+            editType = type;
+            editIndex = index;
+            var title = document.getElementById('edit-title');
+            var input = document.getElementById('edit-input');
+
+            if (type === 'random' && index === -1) {
+                title.textContent = '添加随机惩罚';
+                input.value = '';
+            } else {
+                title.textContent = '编辑内容';
+                if (type === 'fixed') input.value = fixedRewards[index];
+                else if (type === 'special') input.value = specialRewards[index];
+                else if (type === 'random') input.value = randomRewards[index];
+            }
+
+            document.getElementById('edit-modal').style.display = 'flex';
+            setTimeout(function() { input.focus(); }, 80);
+        }
+
+        function closeEditModal() {
+            document.getElementById('edit-modal').style.display = 'none';
+            editType = null;
+            editIndex = -1;
+        }
+
+        function saveEdit() {
+            var text = document.getElementById('edit-input').value.trim();
+            if (!text) {
+                alert('请输入内容');
+                return;
+            }
+
+            if (editType === 'fixed') {
+                fixedRewards[editIndex] = text;
+            } else if (editType === 'special') {
+                specialRewards[editIndex] = text;
+            } else if (editType === 'random') {
+                if (editIndex === -1) {
+                    randomRewards.push(text);
+                } else {
+                    randomRewards[editIndex] = text;
+                }
+            }
+
+            saveSettings();
+            closeEditModal();
+            renderDetailList();
+            // 同时更新主页数字
+            if (document.getElementById('settings-screen').style.display === 'flex') {
+                renderSettingsMain();
+            }
+        }
+
+        function openConfirmModal(type, index) {
+            deleteType = type;
+            deleteIndex = index;
+            document.getElementById('confirm-modal').style.display = 'flex';
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirm-modal').style.display = 'none';
+            deleteType = null;
+            deleteIndex = -1;
+        }
+
+        function doDelete() {
+            if (deleteType === 'random' && deleteIndex >= 0) {
+                randomRewards.splice(deleteIndex, 1);
+            }
+            saveSettings();
+            closeConfirmModal();
+            renderDetailList();
+        }
+
+        // ==================== 返回键 ====================
         window.addEventListener('popstate', function () {
-            if (inGameMode && document.getElementById('result-modal').style.display === 'flex') {
+            const modal = document.getElementById('result-modal');
+            const editModal = document.getElementById('edit-modal');
+            const confirmModal = document.getElementById('confirm-modal');
+
+            if (editModal.style.display === 'flex') {
+                history.pushState(null, null, location.href);
+                closeEditModal();
+                return;
+            }
+            if (confirmModal.style.display === 'flex') {
+                history.pushState(null, null, location.href);
+                closeConfirmModal();
+                return;
+            }
+
+            if (inGameMode && modal.style.display === 'flex') {
                 history.pushState(null, null, location.href);
                 return;
             }
-            if (inGameMode) closeGameView();
+
+            if (inGameMode) {
+                closeGameView();
+                return;
+            }
+
+            if (inDetailMode) {
+                closeDetail();
+                return;
+            }
+
+            if (inSettingsMode) {
+                closeSettings();
+            }
         });
 
         function startGame() {
@@ -834,6 +1427,7 @@
         }
 
         function closeGameView() {
+            closeModal();
             document.getElementById('game-screen').style.display = 'none';
             document.getElementById('home-screen').style.display = 'flex';
             inGameMode = false;
@@ -842,74 +1436,113 @@
         function initGame() {
             currentPlayer = 1;
             openedCount = 0;
-            
+
             var display = document.getElementById('turn-display');
-            display.innerText = "当前轮到：念子";
+            display.innerText = "当前轮到：男生";
             display.style.color = 'var(--primary-color)';
 
             let rewards = [];
 
-            let shuffledPool = [...bigRewardPool];
+            // 随机惩罚：最多取100条
+            let shuffledPool = [...randomRewards];
             for (let i = shuffledPool.length - 1; i > 0; i--) {
                 let j = Math.floor(Math.random() * (i + 1));
                 [shuffledPool[i], shuffledPool[j]] = [shuffledPool[j], shuffledPool[i]];
             }
-            rewards.push(...shuffledPool.slice(0, 100));
+            rewards.push(...shuffledPool.slice(0, Math.min(100, shuffledPool.length)));
 
-            rewards.push(...newFixedRewards);
+            // 固定惩罚全部加入
+            rewards.push(...fixedRewards);
 
-            for (let i = 0; i < NUM_SAFE; i++) rewards.push("你很幸运，没有踩雷");
-            for (let i = 0; i < NUM_DRINK; i++) rewards.push("罚酒一杯");
-            for (let i = 0; i < NUM_STRIP; i++) rewards.push("脱掉一件衣服");
-            for (let i = 0; i < NUM_XP; i++) rewards.push("说出一个你的XP");
-            for (let i = 0; i < NUM_DOUBLE; i++) rewards.push("下回合双倍");
+            // 特殊奖励全部加入（现在是真实数组）
+            rewards.push(...specialRewards);
 
+            // 打乱
             for (let i = rewards.length - 1; i > 0; i--) {
                 let j = Math.floor(Math.random() * (i + 1));
                 [rewards[i], rewards[j]] = [rewards[j], rewards[i]];
             }
 
+            rewards = rewards.slice(0, TOTAL_BOMBS);
+
             var container = document.getElementById('grid-container');
-            container.innerHTML = ''; 
+            container.innerHTML = '';
 
             for (var m = 0; m < TOTAL_BOMBS; m++) {
                 var bomb = document.createElement('div');
                 bomb.className = 'bomb-item';
                 bomb.innerText = '🎁';
-                bomb.setAttribute('data-reward', rewards[m]);
-                
+                bomb.setAttribute('data-reward', rewards[m] || "你很幸运，没有踩雷");
+
                 bomb.onclick = function() {
-                    if (this.classList.contains('opened') || this.classList.contains('opened-safe') ||
-                        this.classList.contains('opened-drink') || this.classList.contains('opened-strip') ||
-                        this.classList.contains('opened-xp') || this.classList.contains('opened-double') ||
-                        this.classList.contains('opened-kiss4') || this.classList.contains('opened-tonguekiss') ||
-                        this.classList.contains('opened-iloveyou') || this.classList.contains('opened-hugspin') ||
-                        this.classList.contains('opened-nude-socks') || this.classList.contains('opened-cloth') ||
-                        this.classList.contains('opened-face-rub') || this.classList.contains('opened-spank') ||
-                        this.classList.contains('opened-selfspank') || this.classList.contains('opened-rebound') ||
-                        this.classList.contains('opened-tickle')) return;
+                    if (this.classList.contains('opened')) return;
+                    var classList = this.classList;
+                    var alreadyOpened = false;
+                    for (var i = 0; i < classList.length; i++) {
+                        if (classList[i].indexOf('opened-') === 0) {
+                            alreadyOpened = true;
+                            break;
+                        }
+                    }
+                    if (alreadyOpened) return;
 
                     if (navigator.vibrate) navigator.vibrate(45);
                     openedCount++;
+
                     var rewardText = this.getAttribute('data-reward');
 
-                    if (rewardText.includes("亲亲对方脸蛋4下")) { this.className = 'bomb-item opened-kiss4'; this.innerText = '😚'; }
-                    else if (rewardText.includes("舌吻20秒")) { this.className = 'bomb-item opened-tonguekiss'; this.innerText = '👅'; }
-                    else if (rewardText.includes("说我爱你")) { this.className = 'bomb-item opened-iloveyou'; this.innerText = '❤️'; }
-                    else if (rewardText.includes("抱起对方转")) { this.className = 'bomb-item opened-hugspin'; this.innerText = '🤗'; }
-                    else if (rewardText.includes("只保留袜子")) { this.className = 'bomb-item opened-nude-socks'; this.innerText = '😍'; }
-                    else if (rewardText.includes("穿上一件衣服") || rewardText.includes("指定对方")) { this.className = 'bomb-item opened-cloth'; this.innerText = '😋'; }
-                    else if (rewardText.includes("用下面蹭对方下面")) { this.className = 'bomb-item opened-face-rub'; this.innerText = '😍'; }
-                    else if (rewardText.includes("打对方屁屁5下")) { this.className = 'bomb-item opened-spank'; this.innerText = '🖐️'; }
-                    else if (rewardText.includes("自己跪趴着")) { this.className = 'bomb-item opened-selfspank'; this.innerText = '💔'; }
-                    else if (rewardText.includes("反弹炸弹")) { this.className = 'bomb-item opened-rebound'; this.innerText = '🎉'; }
-                    else if (rewardText.includes("挠对方痒")) { this.className = 'bomb-item opened-tickle'; this.innerText = '😖'; }
-                    else if (rewardText === "你很幸运，没有踩雷") { this.className = 'bomb-item opened-safe'; this.innerText = '✅'; }
-                    else if (rewardText === "罚酒一杯") { this.className = 'bomb-item opened-drink'; this.innerText = '🍺'; }
-                    else if (rewardText === "脱掉一件衣服") { this.className = 'bomb-item opened-strip'; this.innerText = '👕'; }
-                    else if (rewardText === "说出一个你的XP") { this.className = 'bomb-item opened-xp'; this.innerText = '😈'; }
-                    else if (rewardText === "下回合双倍") { this.className = 'bomb-item opened-double'; this.innerText = '⚡'; }
-                    else { this.className = 'bomb-item opened'; this.innerText = '🤪'; }
+                    if (rewardText.includes("亲亲对方脸蛋4下")) {
+                        this.className = 'bomb-item opened-kiss4';
+                        this.innerText = '😚';
+                    } else if (rewardText.includes("舌吻20秒")) {
+                        this.className = 'bomb-item opened-tonguekiss';
+                        this.innerText = '👅';
+                    } else if (rewardText.includes("说我爱你")) {
+                        this.className = 'bomb-item opened-iloveyou';
+                        this.innerText = '❤️';
+                    } else if (rewardText.includes("抱起对方转")) {
+                        this.className = 'bomb-item opened-hugspin';
+                        this.innerText = '🤗';
+                    } else if (rewardText.includes("只保留袜子")) {
+                        this.className = 'bomb-item opened-nude-socks';
+                        this.innerText = '😍';
+                    } else if (rewardText.includes("穿上一件衣服") || rewardText.includes("指定对方")) {
+                        this.className = 'bomb-item opened-cloth';
+                        this.innerText = '😋';
+                    } else if (rewardText.includes("用下面蹭对方下面")) {
+                        this.className = 'bomb-item opened-face-rub';
+                        this.innerText = '😍';
+                    } else if (rewardText.includes("打对方屁屁5下")) {
+                        this.className = 'bomb-item opened-spank';
+                        this.innerText = '🖐️';
+                    } else if (rewardText.includes("自己跪趴着")) {
+                        this.className = 'bomb-item opened-selfspank';
+                        this.innerText = '💔';
+                    } else if (rewardText.includes("反弹炸弹")) {
+                        this.className = 'bomb-item opened-rebound';
+                        this.innerText = '🎉';
+                    } else if (rewardText.includes("挠对方痒")) {
+                        this.className = 'bomb-item opened-tickle';
+                        this.innerText = '😖';
+                    } else if (rewardText === "你很幸运，没有踩雷") {
+                        this.className = 'bomb-item opened-safe';
+                        this.innerText = '✅';
+                    } else if (rewardText === "罚酒一杯") {
+                        this.className = 'bomb-item opened-drink';
+                        this.innerText = '🍺';
+                    } else if (rewardText === "脱掉一件衣服") {
+                        this.className = 'bomb-item opened-strip';
+                        this.innerText = '👕';
+                    } else if (rewardText === "说出一个你的XP") {
+                        this.className = 'bomb-item opened-xp';
+                        this.innerText = '😈';
+                    } else if (rewardText === "下回合双倍") {
+                        this.className = 'bomb-item opened-double';
+                        this.innerText = '⚡';
+                    } else {
+                        this.className = 'bomb-item opened';
+                        this.innerText = '🤪';
+                    }
 
                     document.getElementById('result-text').innerHTML = formatRewardText(rewardText);
                     const modal = document.getElementById('result-modal');
@@ -918,15 +1551,13 @@
                     const btn = document.getElementById('confirm-btn');
                     const closeBtn = document.querySelector('.close-btn');
                     document.getElementById('countdown').style.display = 'none';
-                    closeBtn.style.display = 'none';   // 默认隐藏叉
+                    closeBtn.style.display = 'none';
 
                     if (isTimedPunishment(rewardText)) {
                         const seconds = extractSeconds(rewardText);
                         btn.textContent = "开始";
                         btn.disabled = false;
-                        btn.onclick = function() {
-                            startCountdown(seconds);
-                        };
+                        btn.onclick = function() { startCountdown(seconds); };
                     } else {
                         btn.textContent = "确认";
                         btn.disabled = false;
@@ -936,23 +1567,24 @@
 
                     currentPlayer = (currentPlayer === 1) ? 2 : 1;
                     var d = document.getElementById('turn-display');
-                    d.innerText = (currentPlayer === 1) ? "当前轮到：念子" : "当前轮到：轩子";
+                    d.innerText = (currentPlayer === 1) ? "当前轮到：男生" : "当前轮到：女生";
                     d.style.color = (currentPlayer === 1) ? 'var(--primary-color)' : 'var(--secondary-color)';
 
                     if (openedCount === TOTAL_BOMBS) {
-                        setTimeout(() => { 
+                        setTimeout(() => {
                             alert("恭喜！200个炸弹全部拆完啦！");
                             closeGameView();
                         }, 600);
                     }
                 };
+
                 container.appendChild(bomb);
             }
         }
 
-        function formatRewardText(text){
+        function formatRewardText(text) {
             text = text.replace(/(\d+)/g, ' <span class="number-highlight">$1</span> ');
-            text = text.replace(/\s+/g,' ');
+            text = text.replace(/\s+/g, ' ');
             return text;
         }
 
