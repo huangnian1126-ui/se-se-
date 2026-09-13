@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-< lang="zh-CN">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>情侣盲盒</title>
     
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="情侣盲盒">
-    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="apple-touch-icon" href="./logo.png">
+    <meta name="theme-color" content="#ff6b81">
 
     <style>
         :root {
@@ -1112,7 +1113,7 @@
     // ==================== 注册 Service Worker（必须有，才能安装到桌面） ====================
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
-            navigator.serviceWorker.register('./sw.js')
+            navigator.serviceWorker.register('./sw.js', { scope: './' })
                 .then(function(reg) {
                     console.log('Service Worker 注册成功');
                 })
